@@ -8,6 +8,7 @@ import { GlobalContext } from "@/context";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const menuItems = [
   {
@@ -34,7 +35,13 @@ export default function Sidebar() {
   const { sideBarOpen, setSideBarOpen } = useContext(GlobalContext);
   const pathName = usePathname();
   const router = useRouter();
+  const { status } = useSession();
+
   const handlenavigate = (getMenuItem) => {
+    if (status === "authenticated") {
+      router.push("/unauth-page");
+      return;
+    }
     router.push(getMenuItem.path);
   };
 
